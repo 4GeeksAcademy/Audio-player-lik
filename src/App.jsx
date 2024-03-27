@@ -6,7 +6,6 @@ const App = () => {
         <>
         
         <AudioPlayer/>
-        
         </>
     )
 }
