@@ -11,13 +11,13 @@ const AudioPlayer = () => {
     }, []);
 
     const fetchSongs = () => {
-        fetch("https://playground.4geeks.com/apis/fake/sound/songs")
+        fetch("https://playground.4geeks.com/sound/songs")
             .then((response) => {
                 if (!response.ok) throw new Error('Error al obtener las canciones');
                 return response.json();
             })
             .then((data) => {
-                setSongs(data);
+                setSongs(data.songs);
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -37,7 +37,7 @@ const AudioPlayer = () => {
     const playNextSong = () => {
         const nextSongIndex = (currentSong + 1) % songs.length;
         const nextSong = songs[nextSongIndex];
-        const url = "https://playground.4geeks.com/apis/fake/sound/" + nextSong.url;
+        const url = "https://playground.4geeks.com" + nextSong.url;
         audioRef.current.src = url;
         setCurrentSong(nextSongIndex);
     };
@@ -45,13 +45,13 @@ const AudioPlayer = () => {
     const playPreviousSong = () => {
         const prevSongIndex = (currentSong - 1 + songs.length) % songs.length;
         const prevSong = songs[prevSongIndex];
-        const url = "https://playground.4geeks.com/apis/fake/sound/" + prevSong.url;
+        const url = "https://playground.4geeks.com" + prevSong.url;
         audioRef.current.src = url;
         setCurrentSong(prevSongIndex);
     };
 
     const changeSong = (cancion, index) => {
-        const songUrl = "https://playground.4geeks.com/apis/fake/sound/" + cancion.url;
+        const songUrl = "https://playground.4geeks.com" + cancion.url;
         audioRef.current.src = songUrl;
         setCurrentSong(index);
         playSong();
@@ -67,11 +67,14 @@ const AudioPlayer = () => {
                 <button onClick={playNextSong}><IoPlayForwardOutline /></button>
             </div>
             <ol className="song-list">
-                {songs.map((cancion, index) => (
-                    <li key={index} onClick={() => changeSong(cancion, index)}>
-                        {cancion.name}
-                    </li>
-                ))}
+                {
+                    Array.isArray(songs) && songs.length > 0 && 
+                        songs.map((cancion, index) => (
+                            <li key={index} onClick={() => changeSong(cancion, index)}>
+                                {cancion.name}
+                            </li>
+                    ))
+                }
             </ol>
         </div>
     );
